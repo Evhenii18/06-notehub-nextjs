@@ -10,7 +10,7 @@ export default async function NoteDetailsPage({
   params,
 }: NoteDetailsPageProps) {
   try {
-    const note: Note = await fetchNoteById(params.id); // params.id — string
+    const note: Note = await fetchNoteById(params.id);
 
     if (!note) {
       return <p>Note not found.</p>;
