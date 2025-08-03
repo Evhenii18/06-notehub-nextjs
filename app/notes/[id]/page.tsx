@@ -3,7 +3,7 @@ import type { Note } from "@/types/note";
 import css from "./NoteDetails.module.css";
 
 interface NoteDetailsPageProps {
-  params: { id: string } | Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function NoteDetailsPage({
