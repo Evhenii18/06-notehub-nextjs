@@ -46,10 +46,8 @@ export default function NotesClient({ initialData }: NotesClientProps) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", currentPage, search],
     queryFn: () => fetchNotes(currentPage, ITEMS_PER_PAGE, search),
-    placeholderData: initialData,
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-    refetchOnWindowFocus: false,
+    enabled: false,
+    initialData: initialData,
   });
 
   return (
