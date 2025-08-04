@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { Note } from '@/types/note';
 
 const BASE_URL = 'https://notehub-public.goit.study/api';
-const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
+const token = process.env.NOTEHUB_TOKEN;
 
 const headers = {
   Authorization: `Bearer ${token}`,
@@ -14,11 +14,13 @@ export const fetchNotes = async (
   search: string = ''
 ): Promise<{ notes: Note[]; totalPages: number }> => {
   
+  
   const params: { page: number; perPage: number; search?: string } = {
     page,
     perPage,
   };
   if (search.trim()) params.search = search.trim();
+  
 
   const response = await axios.get(`${BASE_URL}/notes`, { headers, params });
   return response.data;
