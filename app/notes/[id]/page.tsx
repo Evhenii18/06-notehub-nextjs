@@ -1,46 +1,28 @@
+// app/notes/[id]/page.tsx
 import { fetchNoteById } from "@/lib/api";
-import type { Note } from "@/types/note";
-import css from "./NoteDetails.module.css";
+import NoteDetailsClient from "./NoteDetails.client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-interface NoteDetailsPageProps {
-  params: { id: string } | Promise<{ id: string }>;
-}
-
-export default async function NoteDetailsPage({
+export default async function Page({
   params,
-}: NoteDetailsPageProps) {
-  const awaitedParams = await params;
-  const id = awaitedParams.id;
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const queryClient = new QueryClient();
 
-  if (!id) {
-    return <p>Note ID is missing.</p>;
-  }
-
-  let note: Note | null = null;
-
-  try {
-    note = await fetchNoteById(id);
-  } catch (error) {
-    console.error("Failed to fetch note by id:", error);
-    return <p>Failed to load note details.</p>;
-  }
-
-  if (!note) {
-    return <p>Note not found.</p>;
-  }
+  await queryClient.fetchQuery({
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id),
+  });
 
   return (
-    <div className={css.container}>
-      <div className={css.item}>
-        <div className={css.header}>
-          <h2>{note.title}</h2>
-          <span className={css.tag}>{note.tag}</span>
-        </div>
-        <div className={css.content}>{note.content}</div>
-        <div className={css.date}>
-          {new Date(note.updatedAt).toLocaleDateString()}
-        </div>
-      </div>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NoteDetailsClient id={id} />
+    </HydrationBoundary>
   );
 }
