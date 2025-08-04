@@ -1,4 +1,3 @@
-// app/notes/NoteDetails.client.tsx
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
