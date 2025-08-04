@@ -15,7 +15,7 @@ export default async function Page({
   const { id } = await params;
   const queryClient = new QueryClient();
 
-  await queryClient.fetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
   });
