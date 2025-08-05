@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import debounce from "debounce";
+import { useDebouncedCallback } from "use-debounce";
 import css from "./Notes.client.module.css";
 
 import NoteList from "@/components/NoteList/NoteList";
@@ -25,27 +25,18 @@ export default function NotesClient({ initialData }: NotesClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const debouncedSetSearch = useMemo(() => {
-    const func = debounce((value: string) => {
-      setSearch(value);
-      setCurrentPage(1);
-    }, 300);
-    return func;
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      debouncedSetSearch.clear?.();
-    };
-  }, [debouncedSetSearch]);
+  const debouncedSetSearch = useDebouncedCallback((value: string) => {
+    setSearch(value);
+    setCurrentPage(1);
+  }, 300);
 
   const handleSearchChange = (value: string) => {
     debouncedSetSearch(value);
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notes", currentPage, search],
-    queryFn: () => fetchNotes(currentPage, ITEMS_PER_PAGE, search),
+    queryKey: [search, currentPage, "notes"],
+    queryFn: () => fetchNotes(search, currentPage, ITEMS_PER_PAGE),
     initialData,
     placeholderData: initialData,
   });

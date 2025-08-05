@@ -9,9 +9,10 @@ const headers = {
 };
 
 export const fetchNotes = async (
+  search: string = '',
   page: number,
   perPage: number,
-  search: string = ''
+  
 ): Promise<{ notes: Note[]; totalPages: number }> => {
   const params: { page: number; perPage: number; search?: string } = {
     page,
