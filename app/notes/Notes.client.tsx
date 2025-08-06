@@ -35,8 +35,15 @@ export default function NotesClient({ initialData }: NotesClientProps) {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: [search, currentPage, "notes"],
-    queryFn: () => fetchNotes(search, currentPage, ITEMS_PER_PAGE),
+    queryKey: ["notes", search, currentPage],
+    queryFn: ({ queryKey }) => {
+      const [search, currentPage] = queryKey;
+      return fetchNotes(
+        currentPage as number,
+        ITEMS_PER_PAGE,
+        search as string
+      );
+    },
     initialData,
     placeholderData: initialData,
   });
