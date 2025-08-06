@@ -37,7 +37,7 @@ export default function NotesClient({ initialData }: NotesClientProps) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", search, currentPage],
     queryFn: ({ queryKey }) => {
-      const [search, currentPage] = queryKey;
+      const [, search, currentPage] = queryKey;
       return fetchNotes(
         currentPage as number,
         ITEMS_PER_PAGE,
